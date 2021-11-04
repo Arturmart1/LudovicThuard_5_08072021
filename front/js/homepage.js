@@ -4,10 +4,12 @@ const ITEMS_PER_PAGE = 8
 
 //On va chercher les infos
 
-const retrieveProductsData = () => fetch ('/back/models/Product.js')
-    .then (res => res.json())
-    .then (data => data.product)
-    .catch (err => console.log ("Erreur", err))
+const retrieveProductsData = () => fetch ('/back/data/products.json')
+    .then(res => res.json())
+    .then(data => data.product)
+    .catch(err => console.log ("Erreur", err))
+
+    console.log ("===")
 
 const createProductCardImage = product => {
     const $productImage = document.createElement('img')
