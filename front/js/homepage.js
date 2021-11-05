@@ -1,10 +1,10 @@
-const $productsWrapper = document.querySelector('items');
+const $productsWrapper = document.querySelector('.productContainer');
 
 const ITEMS_PER_PAGE = 8
 
 //On va chercher les infos
 
-const retrieveProductsData = () => fetch('/back/data/products.json')
+const retrieveProductsData = () => fetch('/api/product.json')
     .then(res => res.json())
     .then(data => data.products)
     .catch(err => console.log ("Erreur", err))
@@ -22,7 +22,7 @@ const createProductCardImage = products => {
 
 const createProductCardInfos = products =>{
     const $productInfo = document.createElement('div')
-    $productInfo.classList.add('.item')
+    $productInfo.classList.add('.productContainer')
 
     const $productInfoTitle = document.createElement('h3')
     $productInfoTitle.textContent = `${products.name}`

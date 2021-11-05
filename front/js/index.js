@@ -1,4 +1,4 @@
-const $productContainer = document.querySelector('items');
+const $productContainer = document.querySelector('.productContainer');
 
 const ITEMS_PER_PAGE = 8;
 
@@ -23,8 +23,13 @@ const renderProducts = async () => {
                 <h3 class="productName">${product.name}</h3>
                 <p class="productDescription">${product.description}</p>
             </article>
-        </a>
-      `;
+        </a>`;
     }).join('');
     $productContainer.innerHTML = html;
+};
+
+//display the products
+
+const displayProducts = async () => {
+  await renderProducts();
 };
