@@ -1,39 +1,37 @@
-const $productsWrapper = document.querySelector('.products-wrapper')
+const $productsWrapper = document.querySelector('items');
 
 const ITEMS_PER_PAGE = 8
 
 //On va chercher les infos
 
-const retrieveProductsData = () => fetch ('/back/data/products.json')
+const retrieveProductsData = () => fetch('/back/data/products.json')
     .then(res => res.json())
-    .then(data => data.product)
+    .then(data => data.products)
     .catch(err => console.log ("Erreur", err))
 
-    console.log ("===")
+//On va chercher de quoi remplir la carte
 
-const createProductCardImage = product => {
+const createProductCardImage = products => {
     const $productImage = document.createElement('img')
     $productImage.classList.add('item__img')
-    $productImage.setAttribute ('src', `../back/images/${product.imageURL}`)
-    $productImage.setAttribute ('alt', `Canapé ${product.name}`)
+    $productImage.setAttribute('src', `../back/images/${products.imageURL}`)
+    $productImage.setAttribute('alt', `${products.name}`)
 
     return $productImage
 }
 
-//On va chercher de quoi remplir la carte
-
-const createProductCardInfos = product =>{
+const createProductCardInfos = products =>{
     const $productInfo = document.createElement('div')
     $productInfo.classList.add('.item')
 
     const $productInfoTitle = document.createElement('h3')
-    $productInfoTitle.textContent = `${product.name}`
+    $productInfoTitle.textContent = `${products.name}`
 
     const $productInfoDescription = document.createElement('p')
-    $productInfoDescription.textContent = `${product.description}`
+    $productInfoDescription.textContent = `${products.description}`
 
     const $productButton = document.createElement ('a')
-    $productButton.classList.add('product-button')
+    $productButton.classList.add('products-button')
     $productButton.setAttribute('href', `../front/html/product.html?productID=${product.name}`)
 
     $productInfo.appendChild($productInfoTitle)
@@ -45,11 +43,11 @@ const createProductCardInfos = product =>{
 
 //On crée la carte
 
-const createProductCard = product => {
+const createProductCard = products => {
     const $productCard = document.createElement('div')
     $productCard.classList.add('item')
-    const $productImage = createProductCardImage(product)
-    const $productInfo = createProductCardInfos(product)
+    const $productImage = createProductCardImage(products)
+    const $productInfo = createProductCardInfos(products)
 
     $productCard.appendChild($productImage)
     $productCard.appendChild($productInfo)
@@ -57,31 +55,10 @@ const createProductCard = product => {
     return $productCard
 }
 
-//Offset
+//Affichage de la carte
 
-const calculateOffset = () => {
-    const params = new URLSearchParams(window.location.search)
-    const pageParams = params.get('page')
-
-    if (!pageParams || Number(pageParams) === 1) {
-        return 0
-    }
-
-    return (Number(pageParams) - 1) * ITEMS_PER_PAGE
-}
-
-
-const main = async () => {
-    const productsData = await retrieveProductsData()
-        
-    const offset = calculateOffset()
-
-    for (let i = offset; i < ITEMS_PER_PAGE + offset; i++) {
-        if (productsData[i]) {
-            $productsWrapper.appendChild(createProductCard(productsData[i]))
-        }
-    }
-    console.log ("Erreur", err)
-}
-
-main()
+const displayProducts = products => {
+    products.forEach(products => {
+        const $productCard = createProductCard(products)
+        $productsWrapper.appendChild($productCard)
+    })}
