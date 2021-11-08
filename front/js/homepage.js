@@ -5,11 +5,10 @@ async function getProducts() {
 }
 
 //Remplissage du DOM
-async function fillProducts(){
+async function productsList(){
     let catalogue = await getProducts()
     .then(function(APIresult){
         const products = APIresult;
-        console.table(products);
         for (let product in products){
 
             //Création de l'élément <a>
@@ -24,8 +23,8 @@ async function fillProducts(){
             //Insertion de l'image
             let productImage = document.createElement("img");
             productCard.appendChild(productImage);
-            productImage.setAttribute("src", "${APIresult[.imageURL]");
-            productImage.setAttribute("alt", "${APIresult[.name]");
+            productImage.setAttribute("src", APIresult[product].imageUrl);
+            productImage.setAttribute("alt", products[product].altTxt);
 
             //Insertion du titre
             let productTitle = document.createElement("h3");
@@ -41,4 +40,4 @@ async function fillProducts(){
         }
     })
 }
-fillProducts();
+productsList();
