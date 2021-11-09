@@ -14,7 +14,7 @@ function productsCards(){
             //Création de l'élément <a>
             let productLink = document.createElement("a");
             document.querySelector(".items").appendChild(productLink);
-            productLink.setAttribute( `product.html?id=${resApi[product]._id}` );
+            productLink.setAttribute("href", `product.html?id=${resApi[product]._id}` );
 
             //Création de l'élément <article>
             let productCard = document.createElement("article");
