@@ -49,6 +49,7 @@ function getProductColor() {
     let id = getProductId();
     let product = getProductById(id);
     let colors = document.getElementById('colors');
+    colorPicker(product.colors);
     colors.innerHTML = product.colors;
 }
 
