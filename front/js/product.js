@@ -1,63 +1,45 @@
-// get product id by url
+// Récupération de l'ID par l'URL
 function getProductId() {
-    let url = window.location.href;
-    let id = url.substring(url.lastIndexOf('?') + 1);
-    return id;
+    let url = new URLSearchParams(document.location.search.substring(1)); //trouvé sur le MDN
+    let productId = url.get('id');
+
+    return productId;
 }
-//get product image by id and display it on the page
-function getProductImage() {
-    let id = getProductId();
-    let product = getProductById(id);
-    let image = document.querySelector('.item__img');
-    image.src = product.imageUrl;
+console.log(getProductId());
+
+//Récuperation des infos produit
+function getProducts() {
+    fetch("http://localhost:3000/api/products/" + productId)
+    .then((response) => {
+        return response.json();
+    })
+    .catch(function (_error) {
+            console.log("Erreur lors de la requête API");
+        })
 }
 
-//get product price by id and display it on the page
-function getProductPrice() {
-    let id = getProductId();
-    let product = getProductById(id);
-    let price = document.getElementById('price');
-    price.innerHTML = product.price;
-}
+//display product informations with product id
 
-//get product name by id and display it on the page
-function getProductName() {
-    let id = getProductId();
-    let product = getProductById(id);
-    let name = document.getElementById('title');
-    name.innerHTML = product.name;
-}
+function displayProductInfo() {
+    getProductId().then(function (response) {
+        console.log(response);
+        
+        let productName = document.getElementById("title");
 
-//get product description by id and display it on the page
-function getProductDescription() {
-    let id = getProductId();
-    let product = getProductById(id);
-    let description = document.getElementById('description');
-    description.innerHTML = product.description;
-}
+        let productPrice = document.getElementById("price");
+        
+        let productDescription = document.getElementById("description");
+        
+        let productImage = document.querySelector(".item__img");
+        document.createElement("img").setAttribute("src", data.imageUrl);
 
-//get product price by id and display it on the page
-function getProductPrice() {
-    let id = getProductId();
-    let product = getProductById(id);
-    let price = document.getElementById('price');
-    price.innerHTML = product.price + "€";
-}
+        let productColors = document.getElementById("colors");
 
-// colorpicker
-function getProductColor() {
-    let id = getProductId();
-    let product = getProductById(id);
-    let colors = document.getElementById('colors');
-    colorPicker(product.colors);
-    colors.innerHTML = product.colors;
+        productName.innerHTML = data.name;
+        productPrice.innerHTML = data.price;
+        productDescription.innerHTML = data.description;
+        productImage.src = data.imageUrl;
+        productColors.innerHTML = data.colors;
+    })
 }
-
-//display all fucntions
-function displayProduct() {
-    getProductImage();
-    getProductName();
-    getProductDescription();
-    getProductPrice();
-    getProductColor();
-}
+displayProductInfo();

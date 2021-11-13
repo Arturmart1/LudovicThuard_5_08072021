@@ -4,6 +4,7 @@ async function getProducts() {
 
     return productsData.json();
 }
+//Affichage de la liste des produits
 
 function productsCards(){
     let productsList = getProducts()
@@ -40,7 +41,8 @@ function productsCards(){
         }
     })
     .catch(function(err) {
-        // Une erreur est survenue
-      });
+        console.log(err);
+    }
+    );
 }
 productsCards();
