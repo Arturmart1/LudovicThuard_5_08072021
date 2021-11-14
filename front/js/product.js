@@ -3,6 +3,7 @@ function getProductId() {
     return new URL(window.location.href).searchParams.get('id') //Trouvé sur MDN
 }
 console.log(getProductId());
+
 let productId = getProductId();
 
 //Récuperation des infos produit
@@ -11,48 +12,42 @@ function getProductData() {
     .then((res) => {
         return res.json();
     })
+    .then(async function (resAPI) {
+        productInfo = await resAPI;
+        if (productInfo){
+            postProduct(productInfo);
+        }
+    })
     .catch(function(err){
         console.log(err, "Erreur lors de la requête API");
     })
 }
+getProductData();
 
-function fillProductData(){
-    let productData = getProductData()
-    .then(function (resApi){
-        const product = resApi;
-        for (let product in products){
+function postProduct(productInfo){
 
-            //Image
-            document.createElement("img")
-            document.querySelector(".item__img");
-            productLink.setAttribute("src", `${resApi[product].imageUrl}`);
+    //Insertion de l'image
+    let productImage = document.createElement("img");
+    document.querySelector(".item__img").appendChild(productImage);
+    productImage.setAttribute("src", productInfo.imageUrl);
+    productImage.setAttribute("alt", productInfo.altTxt);
 
-            //Insertion du nom
-            document.getElementById("title").textContent = resApi[product].name;
+    //Insertion du titre
+    let productTitle = document.getElementById("title");
+    productTitle.innerHTML = productInfo.name;
 
-            //Insertion du prix
-            document.getElementById("price").textContent = resApi[product].price + "€";
+    //Insertion du prix
+    let productPrice = document.getElementById("price");
+    productPrice.innerHTML = productInfo.price;
 
-            //Insertion de la description
-            document.getElementById("description").textContent = resApi[product].description;
-        }
-    })
-    .catch(function(err) {
-        console.log(err);
-    }
-    );
-}
-fillProductData();
+    //Insertion de la description
+    let productDescription = document.getElementById("description");
+    productDescription.innerHTML = productInfo.description;
 
-//Gestion des coloris
-
-function colorPicker(){
-    for (let colors of product.colors){
-        console.table(colors);
-        let productColors = document.createElement("option");
-        document.getElementById("colors").appendChild(productColors);
-        productColors.value = colors;
-        productColors.innerHTML = colors;
+    //Color picker
+    for (let i = 0; i < productInfo.colors.length; i++) {
+        let color = document.createElement("option");
+        document.getElementById("colors").appendChild(color);
+        color.innerHTML += `<option value="${productInfo.colors[i]}">${productInfo.colors[i]}</option>`;
     }
 }
-colorPicker();
