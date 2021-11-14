@@ -53,6 +53,7 @@ function postProduct(productInfo){
 }
 
 //Panier
+
 let cart = [];
 let addToCart = document.getElementById("addToCart");
 addToCart.addEventListener("click", function (productInfo) {
