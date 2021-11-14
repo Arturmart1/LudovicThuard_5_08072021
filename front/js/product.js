@@ -51,3 +51,25 @@ function postProduct(productInfo){
         color.innerHTML += `<option value="${productInfo.colors[i]}">${productInfo.colors[i]}</option>`;
     }
 }
+
+//Panier
+let cart = [];
+let addToCart = document.getElementById("addToCart");
+addToCart.addEventListener("click", function (productInfo) {
+    let product = {
+        id: productId,
+        name: productInfo.title,
+        price: productInfo.price,
+        Image: productInfo.imageUrl,
+        color: document.getElementById("colors").value,
+        quantity: document.getElementById("quantity").value,
+    }
+    cart.push(product);
+    console.log(cart);
+    window.confirm("Kanap ajouté au panier !");
+});
+if (localStorage.getItem("cart") === null) {
+    localStorage.setItem("cart", JSON.stringify(cart));
+}else{
+    cart = JSON.parse(localStorage.getItem("cart"));
+}
