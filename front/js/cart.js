@@ -1,24 +1,25 @@
-//get cart data from local storage
+//Import des données du panier
 function getCartData() {
-    var cartData = localStorage.getItem('cart');
-    if (cartData != null) {
+    let cartData = localStorage.getItem("cart");
+    if (cartData) {
         cartData = JSON.parse(cartData);
         return cartData;
-    } else {
-        return [];
     }
+    return [];
 }
-//display cart data
+
+//Affichage du panier
+
 function displayCartData() {
     let cartData = getCartData();
-    let cartBody = document.getElementById('cartBody');
+    let cartBody = document.getElementById('cart__items');
     let cartTotal = 0;
     cartBody.innerHTML = '';
     cartData.forEach(function (item) {
         cartBody.innerHTML += `
         <article class="cart__item" data-id="{product-ID}">
             <div class="cart__item__img">
-                <img src="${item.imageUrl}" alt="${altTxt}">
+                <img src="${item.imageUrl}" alt="${item.altTxt}">
             </div>
             <div class="cart__item__content">
                 <div class="cart__item__content__titlePrice">
@@ -27,11 +28,11 @@ function displayCartData() {
                 </div>
                 <div class="cart__item__content__settings">
                     <div class="cart__item__content__settings__quantity">
-                        <p>Qté : ${item.qty} </p>
+                        <p>Qté : ${item.quantity}</p>
                         <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
                     </div>
                     <div class="cart__item__content__settings__delete">
-                    <button class="btn btn-danger" onclick="removeItem(${item.id})">Supprimer</button>
+                        <p class="deleteItem">Supprimer</p>
                     </div>
                 </div>
             </div>
@@ -39,10 +40,17 @@ function displayCartData() {
         `;
         cartTotal += item.price * item.qty;
     });
-    cartBody.innerHTML += `
-        <tr>
-            <td colspan="3" align="right">Total</td>
-            <td>${cartTotal}</td>
-        </tr>
-    `;
+    let totalCart = document.getElementById("totalPrice")
+    totalCart.innerHTML = cartTotal;
+
+    //Suppression d'un article du panier
+
+    let deleteItem = document.getElementsByClassName("deleteItem");
+    for (let i = 0; i < deleteItem.length; i++) {
+        deleteItem[i].addEventListener("click", function () {
+            let id = deleteItem[i].parentNode.parentNode.parentNode.dataset.id;
+            deleteItemFromCart(id);
+        });
+    }
 }
+displayCartData();

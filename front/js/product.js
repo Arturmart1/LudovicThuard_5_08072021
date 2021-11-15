@@ -44,7 +44,7 @@ function postProduct(productInfo){
     let productDescription = document.getElementById("description");
     productDescription.innerHTML = productInfo.description;
 
-    //Color picker
+    //Choix de la couleur
     for (let i = 0; i < productInfo.colors.length; i++) {
         let color = document.createElement("option");
         document.getElementById("colors").appendChild(color);
