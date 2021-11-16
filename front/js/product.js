@@ -1,6 +1,6 @@
 // Récupération de l'ID par l'URL
 function getProductId() {
-    return new URL(window.location.href).searchParams.get('id') //Trouvé sur MDN
+    return new URL(window.location.href).searchParams.get('id')
 }
 console.log(getProductId());
 
@@ -54,7 +54,8 @@ function postProduct(productInfo){
 
 //Panier
 
-let cart = [];
+let cart = JSON.parse(window.localStorage.getItem("cart") ?? []);
+
 let addToCart = document.getElementById("addToCart");
 addToCart.addEventListener("click", function (productInfo) {
     let product = {
@@ -68,9 +69,5 @@ addToCart.addEventListener("click", function (productInfo) {
     cart.push(product);
     console.log(cart);
     window.confirm("Kanap ajouté au panier !");
-});
-if (localStorage.getItem("cart") === null) {
     localStorage.setItem("cart", JSON.stringify(cart));
-}else{
-    cart = JSON.parse(localStorage.getItem("cart"));
-}
+})
