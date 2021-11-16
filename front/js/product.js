@@ -67,7 +67,6 @@ addToCart.addEventListener("click", function (productInfo) {
         quantity: document.getElementById("quantity").value,
     }
     cart.push(product);
-    console.log(cart);
     window.confirm("Kanap ajouté au panier !");
     localStorage.setItem("cart", JSON.stringify(cart));
 })
