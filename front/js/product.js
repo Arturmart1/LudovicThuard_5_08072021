@@ -52,9 +52,13 @@ function postProduct(productInfo){
     }
 }
 
-//Panier
+//Section ajout au panier
+
+//Initialisation du localStorage
 
 let cart = JSON.parse(window.localStorage.getItem("cart")) ?? [];
+
+//Ajout des produits et de ses infos au localStorage
 
 let addToCart = document.getElementById("addToCart");
 addToCart.addEventListener("click", function (productInfo) {
