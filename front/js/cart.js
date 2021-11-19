@@ -165,38 +165,62 @@ function form() {
 }
 form();
 
-// Envoi de la commande
+//Envoi des informations client au localstorage
 
-function sendOrder() {
-    let form = document.getElementById('order');
+function postForm(){
+    const orderButton = document.getElementById("order");
     let orderId = Math.floor(Math.random() * 1000000);
 
-    form.addEventListener('submit', (event) => {
-        event.preventDefault();
+    orderButton.addEventListener("click", (event)=>{
+    
+        //Récupération des coordonnées du client
 
-        let order = {
-            id: orderId,
-            firstName: document.getElementById('firstName').value,
-            lastName: document.getElementById('lastName').value,
-            address: document.getElementById('address').value,
-            city: document.getElementById('city').value,
-            email: document.getElementById('email').value,
-            cart: cart
+        let inputFirstName = document.getElementById('firstName');
+        let inputLastName = document.getElementById('lastName');
+        let inputAdress = document.getElementById('address');
+        let inputCity = document.getElementById('city');
+        let inputMail = document.getElementById('email');
+
+        //Construction d'un array depuis le local storage
+        let idProducts = [];
+        for (let i = 0; i<cart.length;i++) {
+            idProducts.push(cart[i].idProduit);
         }
+        console.log(idProducts);
 
-        fetch('http://localhost:3000/api/products/order', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
+        const order = {
+            contact : {
+                id: orderId,
+                firstName: inputFirstName.value,
+                lastName: inputLastName.value,
+                address: inputAdress.value,
+                city: inputCity.value,
+                email: inputMail.value,
             },
-            body: JSON.stringify(order)
-        })
-        .then(response => response.json())
-        .then(data => {
+            products: idProducts,
+        } 
+
+        const options = {
+            method: 'POST',
+            body: JSON.stringify(order),
+            headers: {
+                'Accept': 'application/json', 
+                "Content-Type": "application/json" 
+            },
+        };
+
+        fetch("http://localhost:3000/api/products/order", options)
+        .then((response) => response.json())
+        .then((data) => {
             console.log(data);
-            alert('Votre commande a bien été prise en compte');
-            window.location.href = `confirmation.html?${id}`;
+            localStorage.removeItem("cart");
+            localStorage.setItem("orderId", data.orderId);
+
+            document.location.href = `confirmation.html?${orderId}`;
         })
+        .catch((err) => {
+            alert ("Erreur : " + err.message);
+        });
     })
 }
-sendOrder();
+postForm();
