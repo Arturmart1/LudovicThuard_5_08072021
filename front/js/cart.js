@@ -111,7 +111,7 @@ function form() {
     //RegExp
 
     let nameRegExp = /^[a-zA-Zéèêëàâäîïôöûüùç\- ]{2,}$/;
-    let addressRegExp = /^[a-zA-Z0-9éèêëàâäîïôöûüùç\- ]{2,}$/;
+    let addressRegExp = /^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
     let cityRegExp = /^[a-zA-Zéèêëàâäîïôöûüùç\- ]{2,}$/;
     let emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
