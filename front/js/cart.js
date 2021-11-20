@@ -2,7 +2,7 @@
 let cart = JSON.parse(window.localStorage.getItem("cart")) ?? [];
 let emptyCart = document.getElementById('cart__items');
 
-// Display cart or empty cart
+// Affichage du panier
 
 function displayCart() {
     if (cart.length === 0){
@@ -189,7 +189,7 @@ function postForm(){
         console.log(idProducts);
 
         const order = {
-            contact : {
+            client : {
                 id: orderId,
                 firstName: inputFirstName.value,
                 lastName: inputLastName.value,
