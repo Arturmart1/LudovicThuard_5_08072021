@@ -66,7 +66,7 @@ addToCart.addEventListener("click", function (productInfo) {
         id: productId,
         name: document.getElementById("title").innerHTML,
         price: document.getElementById("price").innerHTML,
-        image: document.querySelector(".item__img").innerHTML,
+        image: document.querySelector(".item__img").innerHTML, //Stocker l'url de l'image
         color: document.getElementById("colors").value,
         quantity: document.getElementById("quantity").value,
     }

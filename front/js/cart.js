@@ -20,13 +20,13 @@ function displayCart() {
                 </div>
                 <div class="cart__item__content">
                     <div class="cart__item__content__titlePrice">
-                        <h2>${product.name}</h2>
+                        <h2>${product.name} ${product.color}</h2>
                         <p>${product.price} €</p>
                     </div>
                     <div class="cart__item__content__settings">
                         <div class="cart__item__content__settings__quantity">
-                            <p>Qté : ${product.quantity}</p>
-                            <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
+                            <p>Qté : </p>
+                            <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.quantity}">
                         </div>
                         <div class="cart__item__content__settings__delete">
                             <p class="deleteItem">Supprimer</p>
@@ -91,8 +91,10 @@ deleteItem();
 // Calcul des totaux
 
 function getTotals() {
+    /*parseInt(cart.reduce((acc, cur) => acc + cur.price * cur.quantity, 0));*/
     let totalPrice = 0;
     let totalQuantity = 0;
+    //console.log(typeof totalQuantiy)
     for (let i = 0; i < cart.length; i++) {
         totalPrice += cart[i].price * cart[i].quantity;
         totalQuantity = cart[i].quantity +++ totalQuantity;
@@ -112,7 +114,7 @@ function form() {
 
     let nameRegExp = /^[a-zA-Zéèêëàâäîïôöûüùç\- ]{2,}$/;
     let addressRegExp = /^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
-    let cityRegExp = /^[a-zA-Zéèêëàâäîïôöûüùç\- ]{2,}$/;
+    let cityRegExp = /^[a-zA-Zéèêëàâäîïôöûüùç\- ]{2,}$/; //groupir avec name et renommer la variable
     let emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
 
@@ -124,7 +126,7 @@ function form() {
     const city = document.getElementById('city');
     const email = document.getElementById('email');
 
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', (event) => { //retravailler vérification regexp
         event.preventDefault();
 
         if (!nameRegExp.test(firstName.value)) {
@@ -161,7 +163,7 @@ function form() {
         } else {
             email.classList.remove('error');
         }
-    })
+    }) //empeche l'envoi du formulaire si données fausses
 }
 form();
 
@@ -169,7 +171,6 @@ form();
 
 function postForm(){
     const orderButton = document.getElementById("order");
-    let orderId = Math.floor(Math.random() * 1000000);
 
     orderButton.addEventListener("click", (event)=>{
     
@@ -190,14 +191,13 @@ function postForm(){
 
         const order = {
             contact : {
-                id: orderId,
                 firstName: inputFirstName.value,
                 lastName: inputLastName.value,
                 address: inputAdress.value,
                 city: inputCity.value,
                 email: inputMail.value,
             },
-            cart: cart,
+            products: ["a6ec5b49bd164d7fbe10f37b6363f9fb", "034707184e8e4eefb46400b5a3774b5f"] //récuperer tableaux des produits
         } 
 
         const options = {
@@ -213,9 +213,7 @@ function postForm(){
         .then((response) => response.json())
         .then((data) => {
             console.log(data);
-            
-            localStorage.setItem("orderId", data.id);
-            document.location.href = `confirmation.html?${orderId}`;
+            document.location.href = `confirmation.html?orderId=${data.orderId}`;
         })
         .catch((err) => {
             alert ("Erreur : " + err.message);
