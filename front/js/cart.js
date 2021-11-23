@@ -88,7 +88,7 @@ function deleteItem (){
 }
 deleteItem();
 
-//Calcul des totaux
+// Calcul des totaux
 
 function getTotals() {
     let totalPrice = 0;
@@ -116,7 +116,7 @@ function form() {
     let emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
 
-    //Vérification de la validité des champs
+    // Vérification de la validité des champs
 
     const firstName = document.getElementById('firstName');
     const lastName = document.getElementById('lastName');
@@ -165,60 +165,45 @@ function form() {
 }
 form();
 
-//Envoi des informations client au localstorage
+// Récupération des données du formulaire et envoi des données à l'API
 
-function postOrder(){
-    const orderButton = document.getElementById("order");
+function postOrder() {
+    let form = document.querySelector('.cart__order__form');
 
-    orderButton.addEventListener("click", (_event)=>{
-    
-        //Récupération des coordonnées du client
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
 
-        let inputFirstName = document.getElementById('firstName');
-        let inputLastName = document.getElementById('lastName');
-        let inputAdress = document.getElementById('address');
-        let inputCity = document.getElementById('city');
-        let inputMail = document.getElementById('email');
+        let formData = new FormData(form);
 
-        //Construction d'un array depuis le local storage
+        let orderId = Math.floor(Math.random() * 1000000);
 
-        let productsId = [];
-        for (let i = 0; i<cart.length;i++) {
-            productsId.push(cart[i].productsId);
-        }
-        console.log(productsId);
-
-        const order = {
-            clientData : {
-                firstName: inputFirstName.value,
-                lastName: inputLastName.value,
-                address: inputAdress.value,
-                city: inputCity.value,
-                email: inputMail.value,
-            },
-            products: productsId,
-        } 
-
-        const postOptions = {
-            method: 'POST',
-            body: JSON.stringify(order),
-            headers: {
-                'Accept': 'application/json', 
-                "Content-Type": "application/json" 
-            },
+        let order = {
+            orderId: orderId,
+            firstName: formData.get('firstName'),
+            lastName: formData.get('lastName'),
+            address: formData.get('address'),
+            city: formData.get('city'),
+            email: formData.get('email'),
+            cart: cart
         };
 
-        fetch("http://localhost:3000/api/products/order", postOptions)
-        .then((response) => response.json())
-        .then((data) => {
-            console.log(data);
-            localStorage.setItem("orderId", data.orderId);
-
-            window.location.href = "confirmation.html?order=" + order_id;;
+        fetch('http://localhost:3000/api/cameras/order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(order)
         })
-        .catch((err) => {
-            alert ("Erreur : " + err.message);
-        });
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            alert("Merci pour votre commande, elle sera traitée dans les plus brefs délais.");
+            
+            localStorage.setItem("orderId", orderId);
+
+            window.location.href = `confirmation.html?${orderId}`;
+
+        })
     })
 }
 postOrder();
