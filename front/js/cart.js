@@ -165,45 +165,61 @@ function form() {
 }
 form();
 
-// Récupération des données du formulaire et envoi des données à l'API
+//Envoi des informations client au localstorage
 
-function postOrder() {
-    let form = document.querySelector('.cart__order__form');
+function postForm(){
+    const orderButton = document.getElementById("order");
+    let orderId = Math.floor(Math.random() * 1000000);
 
-    form.addEventListener('submit', (event) => {
-        event.preventDefault();
+    orderButton.addEventListener("click", (event)=>{
+    
+        //Récupération des coordonnées du client
 
-        let formData = new FormData(form);
+        let inputFirstName = document.getElementById('firstName');
+        let inputLastName = document.getElementById('lastName');
+        let inputAdress = document.getElementById('address');
+        let inputCity = document.getElementById('city');
+        let inputMail = document.getElementById('email');
 
-        let orderId = Math.floor(Math.random() * 1000000);
+        //Construction d'un array depuis le local storage
+        let idProducts = [];
+        for (let i = 0; i<cart.length;i++) {
+            idProducts.push(cart[i].idProduit);
+        }
+        console.log(idProducts);
 
-        let order = {
-            orderId: orderId,
-            firstName: formData.get('firstName'),
-            lastName: formData.get('lastName'),
-            address: formData.get('address'),
-            city: formData.get('city'),
-            email: formData.get('email'),
-            cart: cart
+        const order = {
+            contact : {
+                id: orderId,
+                firstName: inputFirstName.value,
+                lastName: inputLastName.value,
+                address: inputAdress.value,
+                city: inputCity.value,
+                email: inputMail.value,
+            },
+            cart: cart,
+        } 
+
+        const options = {
+            method: 'POST',
+            body: JSON.stringify(order),
+            headers: {
+                'Accept': 'application/json', 
+                "Content-Type": "application/json" 
+            },
         };
 
-        fetch('http://localhost:3000/api/cameras/order', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(order)
-        })
-        .then(response => response.json())
-        .then(data => {
+        fetch("http://localhost:3000/api/products/order", options)
+        .then((response) => response.json())
+        .then((data) => {
             console.log(data);
-            alert("Merci pour votre commande, elle sera traitée dans les plus brefs délais.");
             
-            localStorage.setItem("orderId", orderId);
-
-            window.location.href = `confirmation.html?${orderId}`;
-
+            localStorage.setItem("orderId", data.id);
+            document.location.href = `confirmation.html?${orderId}`;
         })
+        .catch((err) => {
+            alert ("Erreur : " + err.message);
+        });
     })
 }
-postOrder();
+postForm();

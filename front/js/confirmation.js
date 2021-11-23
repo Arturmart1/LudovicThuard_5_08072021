@@ -1,9 +1,6 @@
-function displayOrderId(){
-    let orderDisplay = document.getElementById("orderId");
-    let orderId = localStorage.getItem("orderId");
+let url = window.location.href;
+let id = url.substring(url.lastIndexOf('?') + 1);
 
-    orderDisplay.innerHTML = orderId;
-    
-    /*localStorage.clear();*/
-}
-displayOrderId();
+document.getElementById("orderId").innerHTML = id;
+
+localStorage.clear();
