@@ -167,11 +167,10 @@ form();
 
 //Envoi des informations client au localstorage
 
-function postForm(){
+function postOrder(){
     const orderButton = document.getElementById("order");
-    let orderId = Math.floor(Math.random() * 1000000);
 
-    orderButton.addEventListener("click", (event)=>{
+    orderButton.addEventListener("click", (_event)=>{
     
         //Récupération des coordonnées du client
 
@@ -182,25 +181,25 @@ function postForm(){
         let inputMail = document.getElementById('email');
 
         //Construction d'un array depuis le local storage
-        let idProducts = [];
+
+        let productsId = [];
         for (let i = 0; i<cart.length;i++) {
-            idProducts.push(cart[i].idProduit);
+            productsId.push(cart[i].productsId);
         }
-        console.log(idProducts);
+        console.log(productsId);
 
         const order = {
-            client : {
-                id: orderId,
+            clientData : {
                 firstName: inputFirstName.value,
                 lastName: inputLastName.value,
                 address: inputAdress.value,
                 city: inputCity.value,
                 email: inputMail.value,
             },
-            products: idProducts,
+            products: productsId,
         } 
 
-        const options = {
+        const postOptions = {
             method: 'POST',
             body: JSON.stringify(order),
             headers: {
@@ -209,18 +208,17 @@ function postForm(){
             },
         };
 
-        fetch("http://localhost:3000/api/products/order", options)
+        fetch("http://localhost:3000/api/products/order", postOptions)
         .then((response) => response.json())
         .then((data) => {
             console.log(data);
-            localStorage.removeItem("cart");
             localStorage.setItem("orderId", data.orderId);
 
-            document.location.href = `confirmation.html?${orderId}`;
+            window.location.href = "confirmation.html?order=" + order_id;;
         })
         .catch((err) => {
             alert ("Erreur : " + err.message);
         });
     })
 }
-postForm();
+postOrder();
