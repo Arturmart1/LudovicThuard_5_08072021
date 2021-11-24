@@ -94,7 +94,7 @@ function getTotals() {
     /*parseInt(cart.reduce((acc, cur) => acc + cur.price * cur.quantity, 0));*/
     let totalPrice = 0;
     let totalQuantity = 0;
-    //console.log(typeof totalQuantiy)
+    //console.log(typeof totalQuantity)
     for (let i = 0; i < cart.length; i++) {
         totalPrice += cart[i].price * cart[i].quantity;
         totalQuantity = cart[i].quantity +++ totalQuantity;
@@ -112,13 +112,9 @@ function form() {
 
     //RegExp
 
-    let nameRegExp = /^[a-zA-Zéèêëàâäîïôöûüùç\- ]{2,}$/;
+    let varCharRegExp = /^[a-zA-Zéèêëàâäîïôöûüùç\- ]{2,}$/;
     let addressRegExp = /^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
-    let cityRegExp = /^[a-zA-Zéèêëàâäîïôöûüùç\- ]{2,}$/; //groupir avec name et renommer la variable
     let emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-
-
-    // Vérification de la validité des champs
 
     const firstName = document.getElementById('firstName');
     const lastName = document.getElementById('lastName');
@@ -126,19 +122,22 @@ function form() {
     const city = document.getElementById('city');
     const email = document.getElementById('email');
 
+
     form.addEventListener('submit', (event) => { //retravailler vérification regexp
         event.preventDefault();
 
-        if (!nameRegExp.test(firstName.value)) {
-            firstName.classList.add('error');
-            firstName.nextElementSibling.innerHTML = "Veuillez entrer un nom valide";
+        if (!varCharRegExp.test(firstName.value)) {
+            //firstName.classList.add('error');
+            firstName.document.getElementById('firstNameErrorMsg').innerHTML = "Veuillez entrer un nom valide";
+            return false;
         } else {
             firstName.classList.remove('error');
         }
 
-        if (!nameRegExp.test(lastName.value)) {
+        if (!varCharRegExp.test(lastName.value)) {
             lastName.classList.add('error');
             lastName.nextElementSibling.innerHTML = "Veuillez entrer un prénom valide";
+            return false;
         } else {
             lastName.classList.remove('error');
         }
@@ -146,13 +145,15 @@ function form() {
         if (!addressRegExp.test(address.value)) {
             address.classList.add('error');
             address.nextElementSibling.innerHTML = "Veuillez entrer une adresse valide";
+            return false;
         } else {
             address.classList.remove('error');
         }
 
-        if (!cityRegExp.test(city.value)) {
+        if (!varCharRegExp.test(city.value)) {
             city.classList.add('error');
             city.nextElementSibling.innerHTML = "Veuillez entrer une ville valide";
+            return false;
         } else {
             city.classList.remove('error');
         }
@@ -160,10 +161,11 @@ function form() {
         if (!emailRegExp.test(email.value)) {
             email.classList.add('error');
             email.nextElementSibling.innerHTML = "Veuillez entrer un email valide";
+            return false;
         } else {
             email.classList.remove('error');
         }
-    }) //empeche l'envoi du formulaire si données fausses
+    })    
 }
 form();
 
@@ -197,8 +199,8 @@ function postForm(){
                 city: inputCity.value,
                 email: inputMail.value,
             },
-            products: ["a6ec5b49bd164d7fbe10f37b6363f9fb", "034707184e8e4eefb46400b5a3774b5f"] //récuperer tableaux des produits
-        } 
+            products: [idProducts] //récuperer tableaux des produits
+        } //chercher fonction js suppression doublon idProduit
 
         const options = {
             method: 'POST',
