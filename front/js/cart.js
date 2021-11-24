@@ -16,7 +16,7 @@ function displayCart() {
             productItem.innerHTML = `
             <article class="cart__item" data-id="${product.productId}">
                 <div class="cart__item__img">
-                    ${product.image}
+                    <img src="${product.image}" alt="${product.altTxt}">
                 </div>
                 <div class="cart__item__content">
                     <div class="cart__item__content__titlePrice">
@@ -199,7 +199,7 @@ function postForm(){
                 city: inputCity.value,
                 email: inputMail.value,
             },
-            products: [idProducts] //récuperer tableaux des produits
+            products: idProducts, //récuperer tableaux des produits
         } //chercher fonction js suppression doublon idProduit
 
         const options = {
