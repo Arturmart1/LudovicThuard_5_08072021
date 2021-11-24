@@ -91,13 +91,11 @@ deleteItem();
 // Calcul des totaux
 
 function getTotals() {
-    /*parseInt(cart.reduce((acc, cur) => acc + cur.price * cur.quantity, 0));*/
-    let totalPrice = 0;
     let totalQuantity = 0;
-    //console.log(typeof totalQuantity)
+    let totalPrice = 0;
     for (let i = 0; i < cart.length; i++) {
-        totalPrice += cart[i].price * cart[i].quantity;
-        totalQuantity = cart[i].quantity +++ totalQuantity;
+        totalQuantity += parseInt(cart[i].quantity);
+        totalPrice += parseInt(cart[i].quantity) * parseInt(cart[i].price);
     }
     document.getElementById('totalPrice').innerHTML = totalPrice;
     document.getElementById('totalQuantity').innerHTML = totalQuantity;
@@ -122,104 +120,81 @@ function form() {
     const city = document.getElementById('city');
     const email = document.getElementById('email');
 
+    //Vérification des champs
 
-    form.addEventListener('submit', (event) => { //retravailler vérification regexp
+    form.addEventListener("change", (event) => {
         event.preventDefault();
 
-        if (!varCharRegExp.test(firstName.value)) {
-            //firstName.classList.add('error');
-            firstName.document.getElementById('firstNameErrorMsg').innerHTML = "Veuillez entrer un nom valide";
-            return false;
-        } else {
-            firstName.classList.remove('error');
+        if (firstName.value.match(varCharRegExp) && lastName.value.match(varCharRegExp) && address.value.match(addressRegExp) && city.value.match(varCharRegExp) && email.value.match(emailRegExp)) {
+            document.getElementById('order').disabled = true;
+        } else if(!firstName.value.match(varCharRegExp) || !lastName.value.match(varCharRegExp) || !address.value.match(addressRegExp) || !city.value.match(varCharRegExp) || !email.value.match(emailRegExp)) {
+            document.getElementById('order').disabled = true;
+            document.getElementById('firstNameErrorMsg').innerHTML = "Veuillez entrer un prénom valide";
+            document.getElementById('lastNameErrorMsg').innerHTML = "Veuillez entrer un nom valide";
+            document.getElementById('addressErrorMsg').innerHTML = "Veuillez entrer une adresse valide";
+            document.getElementById('cityErrorMsg').innerHTML = "Veuillez entrer une ville valide";
+            document.getElementById('emailErrorMsg').innerHTML = "Veuillez entrer un email valide";
+        } else (firstName.value.match(varCharRegExp) && lastName.value.match(varCharRegExp) && address.value.match(addressRegExp) && city.value.match(varCharRegExp) && email.value.match(emailRegExp)); {
+            document.getElementById('order').disabled = false;
         }
-
-        if (!varCharRegExp.test(lastName.value)) {
-            lastName.classList.add('error');
-            lastName.nextElementSibling.innerHTML = "Veuillez entrer un prénom valide";
-            return false;
-        } else {
-            lastName.classList.remove('error');
-        }
-
-        if (!addressRegExp.test(address.value)) {
-            address.classList.add('error');
-            address.nextElementSibling.innerHTML = "Veuillez entrer une adresse valide";
-            return false;
-        } else {
-            address.classList.remove('error');
-        }
-
-        if (!varCharRegExp.test(city.value)) {
-            city.classList.add('error');
-            city.nextElementSibling.innerHTML = "Veuillez entrer une ville valide";
-            return false;
-        } else {
-            city.classList.remove('error');
-        }
-
-        if (!emailRegExp.test(email.value)) {
-            email.classList.add('error');
-            email.nextElementSibling.innerHTML = "Veuillez entrer un email valide";
-            return false;
-        } else {
-            email.classList.remove('error');
-        }
-    })    
+    })
 }
 form();
 
-//Envoi des informations client au localstorage
+function postOrder(){
+    let form = document.querySelector('.cart__order__form');
+    form.addEventListener('submit', (event) => {
+        if (document.getElementById('order').disabled === false) {
+            event.preventDefault();
 
-function postForm(){
-    const orderButton = document.getElementById("order");
-
-    orderButton.addEventListener("click", (event)=>{
-    
-        //Récupération des coordonnées du client
-
-        let inputFirstName = document.getElementById('firstName');
-        let inputLastName = document.getElementById('lastName');
-        let inputAdress = document.getElementById('address');
-        let inputCity = document.getElementById('city');
-        let inputMail = document.getElementById('email');
-
-        //Construction d'un array depuis le local storage
-        let idProducts = [];
-        for (let i = 0; i<cart.length;i++) {
-            idProducts.push(cart[i].idProduit);
+                let inputFirstName = document.getElementById('firstName');
+                let inputLastName = document.getElementById('lastName');
+                let inputAdress = document.getElementById('address');
+                let inputCity = document.getElementById('city');
+                let inputMail = document.getElementById('email');
+            
+                //Construction d'un array depuis le local storage
+            
+                //Récupération des produits du panier
+                
+                let productsId = [];
+                cart.forEach(product => {
+                    productsId.push(product.id)
+                });
+            
+                const order = {
+                    contact : {
+                        firstName: inputFirstName.value,
+                        lastName: inputLastName.value,
+                        address: inputAdress.value,
+                        city: inputCity.value,
+                        email: inputMail.value,
+                    },
+                    products: productsId,
+                }
+            
+                const options = {
+                    method: 'POST',
+                    body: JSON.stringify(order),
+                    headers: {
+                        'Accept': 'application/json', 
+                        "Content-Type": "application/json" 
+                    },
+                };
+            
+                fetch("http://localhost:3000/api/products/order", options)
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data);
+                    document.location.href = `confirmation.html?orderId=${data.orderId}`;
+                })
+                .catch((err) => {
+                    alert ("Erreur : " + err.message);
+                });
+        }else(document.getElementById('order').disabled === true);{
+            event.preventDefault();
+            return false;
         }
-        console.log(idProducts);
-
-        const order = {
-            contact : {
-                firstName: inputFirstName.value,
-                lastName: inputLastName.value,
-                address: inputAdress.value,
-                city: inputCity.value,
-                email: inputMail.value,
-            },
-            products: idProducts, //récuperer tableaux des produits
-        } //chercher fonction js suppression doublon idProduit
-
-        const options = {
-            method: 'POST',
-            body: JSON.stringify(order),
-            headers: {
-                'Accept': 'application/json', 
-                "Content-Type": "application/json" 
-            },
-        };
-
-        fetch("http://localhost:3000/api/products/order", options)
-        .then((response) => response.json())
-        .then((data) => {
-            console.log(data);
-            document.location.href = `confirmation.html?orderId=${data.orderId}`;
-        })
-        .catch((err) => {
-            alert ("Erreur : " + err.message);
-        });
     })
 }
-postForm();
+postOrder();
