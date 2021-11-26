@@ -110,32 +110,52 @@ function form() {
 
     //RegExp
 
-    let varCharRegExp = /^[a-zA-Zéèêëàâäîïôöûüùç\- ]{2,}$/;
-    let addressRegExp = /^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
-    let emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    const varCharRegExp = /^[a-zA-Zéèêëàâäîïôöûüùç\- ]{2,}$/;
+    const addressRegExp = /^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
+    const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
     const firstName = document.getElementById('firstName');
     const lastName = document.getElementById('lastName');
     const address = document.getElementById('address');
     const city = document.getElementById('city');
     const email = document.getElementById('email');
+/*form.addEventListener("change", (event) => {
+    event.preventDefault();
 
-    //Vérification des champs
-
-    form.addEventListener("change", (event) => {
+    if (firstName.value.match(varCharRegExp) && lastName.value.match(varCharRegExp) && address.value.match(addressRegExp) && city.value.match(varCharRegExp) && email.value.match(emailRegExp)) {
+        document.getElementById('order').disabled = true;
+    } else if(!firstName.value.match(varCharRegExp) || !lastName.value.match(varCharRegExp) || !address.value.match(addressRegExp) || !city.value.match(varCharRegExp) || !email.value.match(emailRegExp)) {
+        document.getElementById('order').disabled = true;
+        document.getElementById('firstNameErrorMsg').innerHTML = "Veuillez entrer un prénom valide";
+        document.getElementById('lastNameErrorMsg').innerHTML = "Veuillez entrer un nom valide";
+        document.getElementById('addressErrorMsg').innerHTML = "Veuillez entrer une adresse valide";
+        document.getElementById('cityErrorMsg').innerHTML = "Veuillez entrer une ville valide";
+        document.getElementById('emailErrorMsg').innerHTML = "Veuillez entrer un email valide";
+    } else (firstName.value.match(varCharRegExp) && lastName.value.match(varCharRegExp) && address.value.match(addressRegExp) && city.value.match(varCharRegExp) && email.value.match(emailRegExp)); {
+        document.getElementById('order').disabled = false;
+    }
+}) */
+    form.addEventListener('change', (event) => {
         event.preventDefault();
 
-        if (firstName.value.match(varCharRegExp) && lastName.value.match(varCharRegExp) && address.value.match(addressRegExp) && city.value.match(varCharRegExp) && email.value.match(emailRegExp)) {
-            document.getElementById('order').disabled = true;
-        } else if(!firstName.value.match(varCharRegExp) || !lastName.value.match(varCharRegExp) || !address.value.match(addressRegExp) || !city.value.match(varCharRegExp) || !email.value.match(emailRegExp)) {
-            document.getElementById('order').disabled = true;
-            document.getElementById('firstNameErrorMsg').innerHTML = "Veuillez entrer un prénom valide";
-            document.getElementById('lastNameErrorMsg').innerHTML = "Veuillez entrer un nom valide";
-            document.getElementById('addressErrorMsg').innerHTML = "Veuillez entrer une adresse valide";
-            document.getElementById('cityErrorMsg').innerHTML = "Veuillez entrer une ville valide";
-            document.getElementById('emailErrorMsg').innerHTML = "Veuillez entrer un email valide";
-        } else (firstName.value.match(varCharRegExp) && lastName.value.match(varCharRegExp) && address.value.match(addressRegExp) && city.value.match(varCharRegExp) && email.value.match(emailRegExp)); {
-            document.getElementById('order').disabled = false;
+        if (varCharRegExp.test(firstName.value) === false) {
+            firstName.style.border = "1px solid red";
+            firstName.focus();
+        } else if (varCharRegExp.test(lastName.value) === false) {
+            lastName.style.border = "1px solid red";
+            lastName.focus();
+        } else if (addressRegExp.test(address.value) === false) {
+            address.style.border = "1px solid red";
+            address.focus();
+        } else if (varCharRegExp.test(city.value) === false) {
+            city.style.border = "1px solid red";
+            city.focus();
+        } else if (emailRegExp.test(email.value) === false) {
+            email.style.border = "1px solid red";
+            email.focus();
+        } else {
+            alert("Merci pour ta commande");
+            window.location.href = "index.html";
         }
     })
 }
