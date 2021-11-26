@@ -102,69 +102,85 @@ function getTotals() {
 }
 getTotals();
 
-// Formulaire
-
 // Verification du formulaire
+
 function form() {
-    let form = document.querySelector('.cart__order__form');
 
     //RegExp
 
     const varCharRegExp = /^[a-zA-Zéèêëàâäîïôöûüùç\- ]{2,}$/;
     const addressRegExp = /^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/;
-    const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    const emailRegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+    // Selection des imputs
 
     const firstName = document.getElementById('firstName');
     const lastName = document.getElementById('lastName');
     const address = document.getElementById('address');
     const city = document.getElementById('city');
     const email = document.getElementById('email');
-/*form.addEventListener("change", (event) => {
-    event.preventDefault();
 
-    if (firstName.value.match(varCharRegExp) && lastName.value.match(varCharRegExp) && address.value.match(addressRegExp) && city.value.match(varCharRegExp) && email.value.match(emailRegExp)) {
-        document.getElementById('order').disabled = true;
-    } else if(!firstName.value.match(varCharRegExp) || !lastName.value.match(varCharRegExp) || !address.value.match(addressRegExp) || !city.value.match(varCharRegExp) || !email.value.match(emailRegExp)) {
-        document.getElementById('order').disabled = true;
-        document.getElementById('firstNameErrorMsg').innerHTML = "Veuillez entrer un prénom valide";
-        document.getElementById('lastNameErrorMsg').innerHTML = "Veuillez entrer un nom valide";
-        document.getElementById('addressErrorMsg').innerHTML = "Veuillez entrer une adresse valide";
-        document.getElementById('cityErrorMsg').innerHTML = "Veuillez entrer une ville valide";
-        document.getElementById('emailErrorMsg').innerHTML = "Veuillez entrer un email valide";
-    } else (firstName.value.match(varCharRegExp) && lastName.value.match(varCharRegExp) && address.value.match(addressRegExp) && city.value.match(varCharRegExp) && email.value.match(emailRegExp)); {
-        document.getElementById('order').disabled = false;
-    }
-}) */
-    form.addEventListener('change', (event) => {
-        event.preventDefault();
+    // Vérification des imputs, désactivation du bouton si erreur et affichage d'un message d'erreur
 
-        if (varCharRegExp.test(firstName.value) === false) {
-            firstName.style.border = "1px solid red";
-            firstName.focus();
-        } else if (varCharRegExp.test(lastName.value) === false) {
-            lastName.style.border = "1px solid red";
-            lastName.focus();
-        } else if (addressRegExp.test(address.value) === false) {
-            address.style.border = "1px solid red";
-            address.focus();
-        } else if (varCharRegExp.test(city.value) === false) {
-            city.style.border = "1px solid red";
-            city.focus();
-        } else if (emailRegExp.test(email.value) === false) {
-            email.style.border = "1px solid red";
-            email.focus();
+    firstName.addEventListener("change", () => {
+        if (varCharRegExp.test(firstName.value)) {
+            document.getElementById('order').disabled = false;
+            document.getElementById('firstNameErrorMsg').innerHTML = "";
         } else {
-            alert("Merci pour ta commande");
-            window.location.href = "index.html";
+            document.getElementById('firstNameErrorMsg').innerHTML = "Veuillez vérifier votre prénom";
+            document.getElementById('order').disabled = true;
         }
-    })
+    }
+    );
+    lastName.addEventListener("change", () => {
+        if (varCharRegExp.test(lastName.value)) {
+            document.getElementById('order').disabled = false;
+            document.getElementById('lastNameErrorMsg').innerHTML = "";
+        } else {
+            document.getElementById('lastNameErrorMsg').innerHTML = "Veuillez vérifier votre nom";
+            document.getElementById('order').disabled = true;
+        }
+    }
+    );
+    address.addEventListener("change", () => {
+        if (addressRegExp.test(address.value)) {
+            document.getElementById('order').disabled = false;
+            document.getElementById('addressErrorMsg').innerHTML = "";
+        } else {
+            document.getElementById('addressErrorMsg').innerHTML = "Veuillez vérifier votre adresse";
+            document.getElementById('order').disabled = true;
+        }
+    }
+    );
+    city.addEventListener("change", () => {
+        if (varCharRegExp.test(city.value)) {
+            document.getElementById('order').disabled = false;
+            document.getElementById('cityErrorMsg').innerHTML = "";
+        } else {
+            document.getElementById('cityErrorMsg').innerHTML = "Veuillez vérifier votre ville";
+            document.getElementById('order').disabled = true;
+        }
+    }
+    );
+    email.addEventListener("change", () => {
+        if (emailRegExp.test(email.value)) {
+            document.getElementById('order').disabled = false;
+            document.getElementById('emailErrorMsg').innerHTML = "";
+        } else {
+            document.getElementById('emailErrorMsg').innerHTML = "Veuillez vérifier votre adresse email";
+            document.getElementById('order').disabled = true;
+        }
+    }
+    );
 }
 form();
+
+// Envoi de la commande
 
 function postOrder(){
     let form = document.querySelector('.cart__order__form');
     form.addEventListener('submit', (event) => {
-        if (document.getElementById('order').disabled === false) {
+        if (document.getElementById('order').disabled === false) { // Si le formulaire est valide, on continue
             event.preventDefault();
 
                 let inputFirstName = document.getElementById('firstName');
@@ -173,9 +189,7 @@ function postOrder(){
                 let inputCity = document.getElementById('city');
                 let inputMail = document.getElementById('email');
             
-                //Construction d'un array depuis le local storage
-            
-                //Récupération des produits du panier
+                // Récuperation des données du formulaire et du contenu du panier
                 
                 let productsId = [];
                 cart.forEach(product => {
@@ -193,6 +207,8 @@ function postOrder(){
                     products: productsId,
                 }
             
+                //Envoi de la commande au serveur via methode POST
+
                 const options = {
                     method: 'POST',
                     body: JSON.stringify(order),
@@ -211,9 +227,6 @@ function postOrder(){
                 .catch((err) => {
                     alert ("Erreur : " + err.message);
                 });
-        }else(document.getElementById('order').disabled === true);{
-            event.preventDefault();
-            return false;
         }
     })
 }
