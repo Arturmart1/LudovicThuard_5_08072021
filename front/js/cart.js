@@ -11,16 +11,16 @@ function displayCart() {
     } else {
         for (let i = 0; i < cart.length; i++) {
             let product = cart[i];
-            let productItem = document.createElement('section');
-            productItem.classList.add('cart__items');
+            let productItem = document.getElementById('cart__items');
             productItem.innerHTML = `
-            <article class="cart__item" data-id="${product.productId}">
+            <article class="cart__item" data-id="${product.productId}" data-color="${product.color}">
                 <div class="cart__item__img">
                     <img src="${product.image}" alt="${product.altTxt}">
                 </div>
                 <div class="cart__item__content">
-                    <div class="cart__item__content__titlePrice">
-                        <h2>${product.name} ${product.color}</h2>
+                    <div class="cart__item__content__description">
+                        <h2>${product.name}</h2>
+                        <p>${product.color}</p>
                         <p>${product.price} €</p>
                     </div>
                     <div class="cart__item__content__settings">
@@ -33,9 +33,7 @@ function displayCart() {
                         </div>
                     </div>
                 </div>
-          </article>
-        `;
-        emptyCart.appendChild(productItem);
+            </article>`;
         }
     }
 }
@@ -45,21 +43,20 @@ displayCart();
 
 function quantityModify () {
     let itemQuantity = document.getElementsByClassName('itemQuantity');
-
     for (let i = 0; i < itemQuantity.length; i++) {
         itemQuantity[i].addEventListener("change", (event) => {
             event.preventDefault();
-
+    
             let qtModif = cart[i].quantity;
             let valueModification = itemQuantity[i].valueAsNumber;
-
+    
             const result = cart.find((e) => e.valueModification !== qtModif);
-
+    
             result.quantity = valueModification;
             cart[i].quantity = result.quantity;
-
+    
             localStorage.setItem("cart", JSON.stringify(cart));
-
+    
             location.reload();
         })
     }
