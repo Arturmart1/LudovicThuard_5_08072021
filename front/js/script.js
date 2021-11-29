@@ -4,45 +4,22 @@ async function getProducts() {
 
     return productsData.json();
 }
-//Affichage de la liste des produits
+// Récupération des informations des produits auprès de l'API et affichage sur la page
 
-function productsCards(){
-    let productsList = getProducts()
-    .then(function (resApi){
-        const products = resApi;
-        for (let product in products){
-
-            //Création de l'élément <a>
-            let productLink = document.createElement("a");
-            document.getElementById("items").appendChild(productLink);
-            productLink.setAttribute("href", `product.html?id=${resApi[product]._id}` );
-
-            //Création de l'élément <article>
-            let productCard = document.createElement("article");
-            productLink.appendChild(productCard);
-
-            //Insertion de l'image
-            let productImage = document.createElement("img");
-            productImage.setAttribute("src", resApi[product].imageUrl);
-            productImage.setAttribute("alt", resApi[product].altTxt);
-            productCard.appendChild(productImage);
-
-            //Insertion du titre
-            let productTitle = document.createElement("h3");
-            productTitle.classList.add("productName");
-            productTitle.innerHTML = resApi[product].name;
-            productCard.appendChild(productTitle);
-
-            //Insertion de la description
-            let productDescription = document.createElement("p");
-            productDescription.classList.add("productDescription");
-            productDescription.innerHTML = resApi[product].description;
-            productCard.appendChild(productDescription);
-        }
-    })
-    .catch(function(err) {
-        console.log(err);
-    }
-    );
+async function displayProducts() {
+    let products = await getProducts();
+    let productsContainer = document.getElementById("items");
+    products.forEach(product => {
+        let productLink = document.createElement("a");
+        productLink.setAttribute("href", "product.html?id=" + product._id);
+        productLink.innerHTML = `
+        <article>
+            <img src="${product.imageUrl}" alt="${product.altTxt}">
+            <h3 class="productName">${product.name}</h3>
+            <p class="productDescription">${product.description}</p>
+        </article>
+        `;
+        productsContainer.appendChild(productLink);
+    });
 }
-productsCards();
+displayProducts();
