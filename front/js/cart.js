@@ -1,14 +1,16 @@
 // Import localstorage
 let cart = JSON.parse(window.localStorage.getItem("cart")) ?? [];
-let emptyCart = document.getElementById('cart__items');
 
 // Récupération des informations et affichage sur la page panier
 
 function displayCart() {
-    for (let i =0; i<cart.length; i++) {
-        let product = cart[i];
-        let productItem = document.getElementById('cart__items');
-        productItem.innerHTML += `
+    if (cart.length === 0) {
+        let emptyCart = document.getElementById('cart__items');
+        emptyCart.innerHTML = "Votre panier est vide";
+    }else{
+        for (product of cart) {
+            let cartContainer = document.getElementById('cart__items');
+            cartContainer.innerHTML += `
             <article class="cart__item" data-id="${product.productId}" data-color="${product.color}">
                 <div class="cart__item__img">
                     <img src="${product.image}" alt="${product.altTxt}">
@@ -29,9 +31,11 @@ function displayCart() {
                         </div>
                     </div>
                 </div>
-            </article>`;
+            </article>
+            `;
         }
     }
+}
 displayCart();
 
 // Mise à jour du panier : Quantité ou suppression
@@ -51,6 +55,7 @@ function cartUpdate() {
         deleteItem.addEventListener("click", () => {
             cart.splice(i, 1);
             window.localStorage.setItem("cart", JSON.stringify(cart));
+            location.reload();
             getTotals();
         });
     }
