@@ -11,7 +11,7 @@ function displayCart() {
         for (product of cart) {
             let cartContainer = document.getElementById('cart__items');
             cartContainer.innerHTML += `
-            <article class="cart__item" data-id="${product.productId}" data-color="${product.color}">
+            <article class="cart__item" data-id="${product.id}" data-color="${product.color}">
                 <div class="cart__item__img">
                     <img src="${product.image}" alt="${product.altTxt}">
                 </div>
@@ -40,38 +40,37 @@ displayCart();
 
 // Modification de la quantité d'un produit avec écoute de l'input
 
+function updateQuantity(event){
+    let article = event.target.closest('article');
+    let index = cart.findIndex(product => product.id === article.dataset.id && product.color === article.dataset.color);
+    cart[index].quantity = parseInt(event.target.value);
+    window.localStorage.setItem("cart", JSON.stringify(cart));
+    getTotals();    
+}
+// Application de la modification de la quantité
+
 function modifyQuantity(){
-    let cartItems = document.getElementsByClassName('cart__item');
-    for (let i = 0; i < cartItems.length; i++) {
-        let cartItem = cartItems[i];
-        let itemQuantity = cartItem.querySelector('.itemQuantity');
-        itemQuantity.addEventListener("change", () => {
-            let productQuantity = itemQuantity.value;
-            cart[i].quantity = productQuantity;
-            window.localStorage.setItem("cart", JSON.stringify(cart));
-            getTotals();
-        });
-    }
+    let cartItems = document.getElementById('cart__items');
+    cartItems.onchange = updateQuantity;
 }
 modifyQuantity();
 
 // Suppression d'un produit du panier
 
+function removeItem(event){
+    let article = event.target.closest('article');
+    cart = cart.filter(product => product.id !== article.dataset.id || product.color !== article.dataset.color);
+    window.localStorage.setItem("cart", JSON.stringify(cart));
+    article.remove();
+    getTotals();
+}
+// Application de la suppression du produit
+
 function deleteItem(){
-    let cartItems = document.getElementsByClassName('cart__item');
-    for (let i = 0; i < cartItems.length; i++) {
-        let cartItem = cartItems[i];
-        let deleteItem = cartItem.querySelector('.deleteItem');
-        deleteItem.addEventListener("click", () => {
-            let productId = cartItem.dataset.id;
-            let productColor = cartItem.dataset.color;
-            let product = cart.find(product => product.productId === productId && product.color === productColor);
-            cart.splice(cart.indexOf(product), 1);
-            window.localStorage.setItem("cart", JSON.stringify(cart));
-            alert("Le produit a bien été supprimé");
-            location.reload();
-        });
-    }
+    let cartItems = document.getElementsByClassName('deleteItem');
+    for (let item of cartItems){
+        item.onclick = removeItem;
+    } 
 }
 deleteItem();
 
@@ -84,8 +83,8 @@ function getTotals() {
         totalQuantity += parseInt(cart[i].quantity);
         totalPrice += parseInt(cart[i].quantity) * parseInt(cart[i].price);
     }
-    document.getElementById('totalPrice').innerHTML = totalPrice;
-    document.getElementById('totalQuantity').innerHTML = totalQuantity;
+    document.getElementById('totalPrice').textContent = totalPrice;
+    document.getElementById('totalQuantity').textContent = totalQuantity;
 }
 getTotals();
 
@@ -112,9 +111,9 @@ function form() {
     firstName.addEventListener("change", () => {
         if (varCharRegExp.test(firstName.value)) {
             document.getElementById('order').disabled = false;
-            document.getElementById('firstNameErrorMsg').innerHTML = "";
+            document.getElementById('firstNameErrorMsg').textContent = "";
         } else {
-            document.getElementById('firstNameErrorMsg').innerHTML = "Veuillez vérifier votre prénom";
+            document.getElementById('firstNameErrorMsg').textContent = "Veuillez vérifier votre prénom";
             document.getElementById('order').disabled = true;
         }
     }
@@ -122,9 +121,9 @@ function form() {
     lastName.addEventListener("change", () => {
         if (varCharRegExp.test(lastName.value)) {
             document.getElementById('order').disabled = false;
-            document.getElementById('lastNameErrorMsg').innerHTML = "";
+            document.getElementById('lastNameErrorMsg').textContent = "";
         } else {
-            document.getElementById('lastNameErrorMsg').innerHTML = "Veuillez vérifier votre nom";
+            document.getElementById('lastNameErrorMsg').textContent = "Veuillez vérifier votre nom";
             document.getElementById('order').disabled = true;
         }
     }
@@ -132,9 +131,9 @@ function form() {
     address.addEventListener("change", () => {
         if (addressRegExp.test(address.value)) {
             document.getElementById('order').disabled = false;
-            document.getElementById('addressErrorMsg').innerHTML = "";
+            document.getElementById('addressErrorMsg').textContent = "";
         } else {
-            document.getElementById('addressErrorMsg').innerHTML = "Veuillez vérifier votre adresse";
+            document.getElementById('addressErrorMsg').textContent = "Veuillez vérifier votre adresse";
             document.getElementById('order').disabled = true;
         }
     }
@@ -142,9 +141,9 @@ function form() {
     city.addEventListener("change", () => {
         if (varCharRegExp.test(city.value)) {
             document.getElementById('order').disabled = false;
-            document.getElementById('cityErrorMsg').innerHTML = "";
+            document.getElementById('cityErrorMsg').textContent = "";
         } else {
-            document.getElementById('cityErrorMsg').innerHTML = "Veuillez vérifier votre ville";
+            document.getElementById('cityErrorMsg').textContent = "Veuillez vérifier votre ville";
             document.getElementById('order').disabled = true;
         }
     }
@@ -152,9 +151,9 @@ function form() {
     email.addEventListener("change", () => {
         if (emailRegExp.test(email.value)) {
             document.getElementById('order').disabled = false;
-            document.getElementById('emailErrorMsg').innerHTML = "";
+            document.getElementById('emailErrorMsg').textContent = "";
         } else {
-            document.getElementById('emailErrorMsg').innerHTML = "Veuillez vérifier votre adresse email";
+            document.getElementById('emailErrorMsg').textContent = "Veuillez vérifier votre adresse email";
             document.getElementById('order').disabled = true;
         }
     }
