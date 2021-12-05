@@ -207,6 +207,8 @@ function postOrder(){
                 .catch((err) => {
                     alert ("Erreur : " + err.message);
                 });
+        }else{
+            document.getElementById('order').disabled === true
         }
     })
 }
