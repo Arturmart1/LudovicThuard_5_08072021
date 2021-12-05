@@ -1,7 +1,6 @@
 //Récuperation des articles
 async function getProducts() {
     let productsData = await fetch ("http://localhost:3000/api/products")
-
     return productsData.json();
 }
 // Récupération des informations des produits auprès de l'API et affichage sur la page

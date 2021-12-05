@@ -116,8 +116,7 @@ function form() {
             document.getElementById('firstNameErrorMsg').textContent = "Veuillez vérifier votre prénom";
             document.getElementById('order').disabled = true;
         }
-    }
-    );
+    });
     lastName.addEventListener("change", () => {
         if (varCharRegExp.test(lastName.value)) {
             document.getElementById('order').disabled = false;
@@ -126,8 +125,7 @@ function form() {
             document.getElementById('lastNameErrorMsg').textContent = "Veuillez vérifier votre nom";
             document.getElementById('order').disabled = true;
         }
-    }
-    );
+    });
     address.addEventListener("change", () => {
         if (addressRegExp.test(address.value)) {
             document.getElementById('order').disabled = false;
@@ -136,8 +134,7 @@ function form() {
             document.getElementById('addressErrorMsg').textContent = "Veuillez vérifier votre adresse";
             document.getElementById('order').disabled = true;
         }
-    }
-    );
+    });
     city.addEventListener("change", () => {
         if (varCharRegExp.test(city.value)) {
             document.getElementById('order').disabled = false;
@@ -146,8 +143,7 @@ function form() {
             document.getElementById('cityErrorMsg').textContent = "Veuillez vérifier votre ville";
             document.getElementById('order').disabled = true;
         }
-    }
-    );
+    });
     email.addEventListener("change", () => {
         if (emailRegExp.test(email.value)) {
             document.getElementById('order').disabled = false;
@@ -156,8 +152,7 @@ function form() {
             document.getElementById('emailErrorMsg').textContent = "Veuillez vérifier votre adresse email";
             document.getElementById('order').disabled = true;
         }
-    }
-    );
+    });
 }
 form();
 
@@ -207,7 +202,6 @@ function postOrder(){
                 fetch("http://localhost:3000/api/products/order", options)
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log(data);
                     document.location.href = `confirmation.html?orderId=${data.orderId}`;
                 })
                 .catch((err) => {
