@@ -73,7 +73,7 @@ addToCart.addEventListener("click", function (productInfo) {
 
     //Vérification de la complétion des champs couleur et quantité
     
-    if (product.color === "" || product.quantity === "") {
+    if (product.color === "" || product.quantity < 1) {
         alert("Veuillez remplir tous les champs");
     } else { //Vérification de la présence dans le panier, modification si nécessaire
         let productExist = false;
